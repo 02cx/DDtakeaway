@@ -58,11 +58,11 @@ public class CategoryServiceImpl implements CategoryService {
         // 新增分类状态 默认为0 因为新增得分类下可能还没菜品
         category.setStatus(StatusConstant.DISABLE);
 
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateTime(LocalDateTime.now());
-
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setCreateTime(LocalDateTime.now());
+//
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
 
         categoryMapper.insert(category);
 
@@ -100,8 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void startOrStop(Integer status, Long id) {
         Category category = Category.builder()
                 .id(id).status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId()).build();
+                .build();
         categoryMapper.update(category);
     }
 
@@ -113,8 +112,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setUpdateTime(LocalDateTime.now());
+        //category.setUpdateUser(BaseContext.getCurrentId());
+        //category.setUpdateTime(LocalDateTime.now());
         categoryMapper.update(category);
     }
 
