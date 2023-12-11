@@ -6,3 +6,10 @@ sky:
     database: sky_take_out
     username: root
     password: dandan
+aliyun:
+  oss:
+    file:
+      endpoint: oss-cn-beijing.aliyuncs.com # 对应公网endpoint地址
+      keyid: LTAI5tNzUMXZ9jfLHqS79pxH
+      keysecret: 4oweZXHD1bu67tZsn2roj8gZWRpb3Q
+      bucketname: dd-mail  #可以代码层面实现
