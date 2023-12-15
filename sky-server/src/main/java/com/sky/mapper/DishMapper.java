@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -55,4 +57,19 @@ public interface DishMapper {
      * @param dish
      */
     void update(Dish dish);
+
+    /**
+     *  根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> getByCategoryId(Long categoryId);
+
+    /**
+     * 根据套餐id查询套餐关联的菜品详细信息
+     * @param id
+     * @return
+     */
+    List<Dish> selectBySetmealId(Long id);
 }
