@@ -15,7 +15,7 @@ public class OSSConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AliOssUtil aliOssUtilBean(AliOssProperties aliOssProperties){
-        log.info("开始创建阿里云OSS工具类...");
+        log.info("开始创建阿里云OSS工具类....");
         return new AliOssUtil(aliOssProperties.getEndpoint(),
                 aliOssProperties.getAccessKeyId(),
                 aliOssProperties.getAccessKeySecret(),
