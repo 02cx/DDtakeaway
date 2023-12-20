@@ -3,6 +3,7 @@ package com.sky.mapper;
 import com.sky.entity.ShoppingCart;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface ShoppingCartMapper {
      * @param shoppingCart
      * @return
      */
-     List list(ShoppingCart shoppingCart);
+     List<ShoppingCart> list(ShoppingCart shoppingCart);
 
     /**
      * 根据购物车id修改菜品数量
@@ -33,4 +34,5 @@ public interface ShoppingCartMapper {
             "number, amount, image, create_time) values (#{name},#{userId},#{dishId},#{setmealId}" +
             ",#{dishFlavor},#{number},#{amount},#{image},#{createTime})")
     void insert(ShoppingCart shoppingCart);
+
 }
