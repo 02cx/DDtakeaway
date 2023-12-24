@@ -1,7 +1,10 @@
 package com.sky.service;
 
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 
 public interface OrdersService {
     /**
@@ -11,4 +14,17 @@ public interface OrdersService {
      */
     OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
 
+    /**
+     *  分页查询历史订单
+     * @return
+     */
+    PageResult pageQueryHistoryOrders(int page, int pageSize, Integer status);
+
+
+    /**
+     *  查询订单详情
+     * @param id
+     * @return
+     */
+    OrderVO queryOrderDetail(Long id);
 }

@@ -1,7 +1,10 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -13,16 +16,28 @@ import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrdersMapper;
 import com.sky.mapper.ShoppingCartMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrdersService;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
@@ -96,4 +111,63 @@ public class OrdersServiceImpl implements OrdersService {
 
         return orderSubmitVO;
     }
+
+    /**
+     *  分页查询历史订单
+     * @param pageNum
+     * @param pageSize
+     * @param status
+     * @return
+     */
+    public PageResult pageQueryHistoryOrders(int pageNum, int pageSize, Integer status) {
+        PageHelper.startPage(pageNum,pageSize);
+
+        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+        ordersPageQueryDTO.setStatus(status);
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+
+        // 分页查询
+        Page<Orders> page = ordersMapper.pageQuery(ordersPageQueryDTO);
+
+        ArrayList<OrderVO> arrayList = new ArrayList<>();
+
+       if(page != null && page.getTotal() > 0){
+           for(Orders orders : page){
+               Long orderId = orders.getId();// 订单id
+
+               // 查询订单明细
+               List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(orderId);
+
+               OrderVO orderVO = new OrderVO();
+               BeanUtils.copyProperties(orders, orderVO);
+               orderVO.setOrderDetailList(orderDetails);
+
+               arrayList.add(orderVO);
+           }
+       }
+
+        return new PageResult(page.getTotal(),arrayList);
+    }
+
+    /**
+     *  根据订单号查询订单详情
+     * @param id
+     * @return
+     */
+    public OrderVO queryOrderDetail(Long id) {
+       // OrderVO orderVO = ordersMapper.queryOrderAndOrderDetail(id);
+        Orders orders = ordersMapper.getById(id);
+        // 查询该订单对应的菜品/套餐明细
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(orders.getId());
+
+        // 将该订单及其详情封装到OrderVO并返回
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders, orderVO);
+        orderVO.setOrderDetailList(orderDetailList);
+
+        return orderVO;
+    }
 }
+
+
+
